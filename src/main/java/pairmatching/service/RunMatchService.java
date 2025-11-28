@@ -14,14 +14,14 @@ import pairmatching.view.ConsoleView;
 public class RunMatchService {
     ConsoleView consoleView;
     ControllerPhase controllerPhase;
-    RunMatchParser runMatchParser;
+    MatchParser matchParser;
 
     Crew crew;
 
     public RunMatchService(ConsoleView consoleView, ControllerPhase controllerPhase, Crew crew) {
         this.consoleView = consoleView;
         this.controllerPhase = controllerPhase;
-        this.runMatchParser = new RunMatchParser();
+        this.matchParser = new MatchParser();
         this.crew = crew;
     }
 
@@ -37,7 +37,7 @@ public class RunMatchService {
 
     public void run() {
         consoleView.printPairMatchingView();
-        CourseAndMission courseAndMission = runMatchParser.parse(Console.readLine());
+        CourseAndMission courseAndMission = matchParser.parse(Console.readLine());
 
         boolean playShuffle = decideToShuffle(courseAndMission);
         if (playShuffle) {
@@ -54,7 +54,7 @@ public class RunMatchService {
             while (true) {
                 try {
                     consoleView.printMatchedListAlreadyExist();
-                    return runMatchParser.parseYesOrNo(Console.readLine());
+                    return matchParser.parseYesOrNo(Console.readLine());
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }

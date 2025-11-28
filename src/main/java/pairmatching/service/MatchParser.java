@@ -8,12 +8,12 @@ import pairmatching.data.CourseType;
 import pairmatching.data.MissionType;
 import pairmatching.exception.PairMatchException;
 
-public class RunMatchParser {
+public class MatchParser {
 
-    public RunMatchParser() {
+    public MatchParser() {
     }
 
-    public CourseAndMission parse(String rawUserInput) {
+    public static CourseAndMission parse(String rawUserInput) {
         try {
             List<String> parsedUserInput = Arrays.stream(rawUserInput.split(",")).collect(Collectors.toList());
             String courseUserInput = parsedUserInput.get(0).trim();
@@ -28,14 +28,14 @@ public class RunMatchParser {
         }
     }
 
-    private CourseType validateCourse(String courseUserInput) {
+    private static CourseType validateCourse(String courseUserInput) {
         return Arrays.stream(CourseType.values())
                 .filter(courseType -> courseType.getKorean().equals(courseUserInput))
                 .findFirst()
                 .orElseThrow(() -> new PairMatchException("존재하지 않는 과정입니다."));
     }
 
-    private MissionType validateMission(String missionLevelUserInput, String missionNameUserInput) {
+    private static MissionType validateMission(String missionLevelUserInput, String missionNameUserInput) {
         return Arrays.stream(MissionType.values()).collect(Collectors.toList()).stream()
                 .filter(missionType -> missionType.getKorean().equals(missionNameUserInput))
                 .filter(missionType -> missionType.getLevel() == Integer.parseInt(missionLevelUserInput))

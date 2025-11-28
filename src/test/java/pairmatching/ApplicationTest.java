@@ -6,10 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pairmatching.service.RunMatchParser;
+import pairmatching.service.MatchParser;
 import pairmatching.view.ConsoleView;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -61,8 +60,8 @@ class ApplicationTest extends NsTest {
 
     @Test
     void 파싱_페어_매치() {
-        RunMatchParser runMatchParser = new RunMatchParser();
-        CourseAndMission courseAndMission = runMatchParser.parse("백엔드, 레벨1, 자동차경주");
+        MatchParser matchParser = new MatchParser();
+        CourseAndMission courseAndMission = matchParser.parse("백엔드, 레벨1, 자동차경주");
         Assertions.assertNotNull(courseAndMission);
         Assertions.assertEquals("백엔드", courseAndMission.courseType.getKorean());
         Assertions.assertEquals(1, courseAndMission.missionType.getLevel());

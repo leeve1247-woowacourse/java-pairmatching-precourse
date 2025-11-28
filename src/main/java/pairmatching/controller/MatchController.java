@@ -4,6 +4,7 @@ import pairmatching.data.crew.Crew;
 import pairmatching.service.ClearMatchService;
 import pairmatching.service.MainMenuService;
 import pairmatching.service.RunMatchService;
+import pairmatching.service.ViewMatchService;
 import pairmatching.view.ConsoleView;
 
 public class MatchController {
@@ -31,6 +32,13 @@ public class MatchController {
                     RunMatchService runMatchService = new RunMatchService(consoleView, controllerPhase, crew);
                     runMatchService.run();
                     controllerPhase = runMatchService.shiftPhase();
+                    continue;
+                }
+
+                if (controllerPhase == ControllerPhase.viewMatch) {
+                    ViewMatchService viewMatchService = new ViewMatchService(consoleView, controllerPhase, crew);
+                    viewMatchService.run();
+                    controllerPhase = viewMatchService.shiftPhase();
                     continue;
                 }
 
