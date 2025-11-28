@@ -7,9 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import pairmatching.CourseAndMission;
-import pairmatching.data.crew.Crew;
 import pairmatching.controller.ControllerPhase;
-import pairmatching.exception.PairMatchException;
+import pairmatching.data.crew.Crew;
 import pairmatching.view.ConsoleView;
 
 public class RunMatchService {
@@ -36,12 +35,32 @@ public class RunMatchService {
         return pair;
     }
 
-    public void run(){
+    public void run() {
         consoleView.printPairMatchingView();
         CourseAndMission courseAndMission = runMatchParser.parse(Console.readLine());
-        List<List<String>> shuffledList = shuffle(courseAndMission);
-        consoleView.printPariMatchedListView(shuffledList);
+
+        boolean playShuffle = decideToShuffle(courseAndMission);
+        if (playShuffle) {
+            List<List<String>> shuffledList = shuffle(courseAndMission);
+            consoleView.printPariMatchedListView(shuffledList);
+        }
+
         controllerPhase = ControllerPhase.MainMenu;
+    }
+
+    private boolean decideToShuffle(CourseAndMission courseAndMission) {
+        boolean playShuffle = true;
+        if (crew.isThereMatchedInfo(courseAndMission)) {
+            while (true) {
+                try {
+                    consoleView.printMatchedListAlreadyExist();
+                    return runMatchParser.parseYesOrNo(Console.readLine());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return playShuffle;
     }
 
     public List<List<String>> shuffle(CourseAndMission courseAndMission) {

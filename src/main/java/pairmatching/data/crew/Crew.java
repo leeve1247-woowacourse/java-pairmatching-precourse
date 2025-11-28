@@ -52,4 +52,8 @@ public class Crew {
         List<List<String>> pairs = pairedCrewMap.get(courseAndMission);
         pairs.get(pairs.size()-1).add(lastCrew);
     }
+
+    public boolean isThereMatchedInfo(CourseAndMission courseAndMission) {
+        return !pairedCrewMap.getOrDefault(courseAndMission, new ArrayList<>()).isEmpty();
+    }
 }

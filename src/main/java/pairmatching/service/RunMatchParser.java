@@ -13,7 +13,7 @@ public class RunMatchParser {
     public RunMatchParser() {
     }
 
-    public CourseAndMission parse(String rawUserInput) throws PairMatchException {
+    public CourseAndMission parse(String rawUserInput) {
         try {
             List<String> parsedUserInput = Arrays.stream(rawUserInput.split(",")).collect(Collectors.toList());
             String courseUserInput = parsedUserInput.get(0).trim();
@@ -41,6 +41,17 @@ public class RunMatchParser {
                 .filter(missionType -> missionType.getLevel() == Integer.parseInt(missionLevelUserInput))
                 .findFirst()
                 .orElseThrow(() -> new PairMatchException("존재하지 않는 미션입니다."));
+    }
+
+    public boolean parseYesOrNo(String rawUserInput) {
+        rawUserInput = rawUserInput.trim();
+        if (rawUserInput.equals("네")) {
+            return true;
+        }
+        if (rawUserInput.equals("아니오")) {
+            return false;
+        }
+        throw new PairMatchException("잘못된 입력입니다.");
     }
 }
 

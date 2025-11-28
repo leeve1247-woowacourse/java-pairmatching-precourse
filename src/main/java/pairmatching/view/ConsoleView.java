@@ -61,4 +61,9 @@ public class ConsoleView {
             System.out.printf("%s\n", joinedPairs);
         }
     }
+
+    public void printMatchedListAlreadyExist() {
+        System.out.println("매칭 정보가 있습니다. 다시 매칭하시겠습니까?");
+        System.out.println("네 | 아니오");
+    }
 }
