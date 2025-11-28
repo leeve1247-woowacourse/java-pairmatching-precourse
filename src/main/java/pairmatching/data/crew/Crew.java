@@ -29,31 +29,22 @@ public class Crew {
         return crewsByCourseType.get(courseType);
     }
 
-    public Map<CourseAndMission, List<List<String>>> getPairedCrewMap() {
-        return pairedCrewMap;
-    }
-
-    public Map<Integer, List<List<String>>> getPairedCrewMapByLevel() {
-        return pairedCrewMapByLevel;
-    }
-
-    public List<List<String>> getCrewsByCourseAndMission(CourseAndMission courseAndMission) {
+    public List<List<String>> getPairsByCourseAndMission(CourseAndMission courseAndMission) {
         pairedCrewMap.putIfAbsent(courseAndMission, new ArrayList<>());
         return pairedCrewMap.get(courseAndMission);
     }
 
-    public void addPairsToList(CourseAndMission courseAndMission, List<String> pair) {
-        pairedCrewMap.putIfAbsent(courseAndMission, new ArrayList<>());
-        pairedCrewMap.get(courseAndMission).add(pair);
-    }
-
-    public void addCrewToLastPair(CourseAndMission courseAndMission, String lastCrew) {
-        pairedCrewMap.putIfAbsent(courseAndMission, new ArrayList<>());
-        List<List<String>> pairs = pairedCrewMap.get(courseAndMission);
-        pairs.get(pairs.size()-1).add(lastCrew);
+    public List<List<String>> getPairsByLevel(CourseAndMission courseAndMission) {
+        pairedCrewMapByLevel.putIfAbsent(courseAndMission.missionType.getLevel(), new ArrayList<>());
+        return pairedCrewMapByLevel.get(courseAndMission.missionType.getLevel());
     }
 
     public boolean isThereMatchedInfo(CourseAndMission courseAndMission) {
         return !pairedCrewMap.getOrDefault(courseAndMission, new ArrayList<>()).isEmpty();
+    }
+
+    public void putPairsByCourseAndMission(CourseAndMission courseAndMission, List<List<String>> generatedCrew) {
+        pairedCrewMap.put(courseAndMission, generatedCrew);
+        getPairsByLevel(courseAndMission).addAll(generatedCrew);
     }
 }

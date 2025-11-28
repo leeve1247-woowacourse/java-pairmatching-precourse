@@ -13,7 +13,7 @@ public class MatchParser {
     public MatchParser() {
     }
 
-    public static CourseAndMission parse(String rawUserInput) {
+    public static CourseAndMission parseToCourseAndMission(String rawUserInput) {
         try {
             List<String> parsedUserInput = Arrays.stream(rawUserInput.split(",")).collect(Collectors.toList());
             String courseUserInput = parsedUserInput.get(0).trim();
@@ -43,7 +43,7 @@ public class MatchParser {
                 .orElseThrow(() -> new PairMatchException("존재하지 않는 미션입니다."));
     }
 
-    public boolean parseYesOrNo(String rawUserInput) {
+    public static boolean parseYesOrNo(String rawUserInput) {
         rawUserInput = rawUserInput.trim();
         if (rawUserInput.equals("네")) {
             return true;

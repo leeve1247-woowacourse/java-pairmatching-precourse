@@ -1,86 +1,75 @@
 package pairmatching.service;
 
 import camp.nextstep.edu.missionutils.Console;
-import camp.nextstep.edu.missionutils.Randoms;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import pairmatching.CourseAndMission;
 import pairmatching.controller.ControllerPhase;
 import pairmatching.data.crew.Crew;
+import pairmatching.data.crew.Shuffler;
+import pairmatching.exception.PairMatchException;
+import pairmatching.validator.PairValidator;
 import pairmatching.view.ConsoleView;
 
 public class RunMatchService {
-    ConsoleView consoleView;
     ControllerPhase controllerPhase;
-    MatchParser matchParser;
-
     Crew crew;
 
-    public RunMatchService(ConsoleView consoleView, ControllerPhase controllerPhase, Crew crew) {
-        this.consoleView = consoleView;
+    public RunMatchService(ControllerPhase controllerPhase, Crew crew) {
         this.controllerPhase = controllerPhase;
-        this.matchParser = new MatchParser();
         this.crew = crew;
     }
 
-    private static List<String> extractTwoFromFirst(List<String> shuffledCrew) {
-        List<String> pair = new ArrayList<>();
-        String remove = shuffledCrew.remove(0);
-        pair.add(
-                remove
-        );
-        pair.add(shuffledCrew.remove(0));
-        return pair;
-    }
-
     public void run() {
-        consoleView.printPairMatchingView();
-        CourseAndMission courseAndMission = matchParser.parse(Console.readLine());
-
-        boolean playShuffle = decideToShuffle(courseAndMission);
-        if (playShuffle) {
-            List<List<String>> shuffledList = shuffle(courseAndMission);
-            consoleView.printPariMatchedListView(shuffledList);
+        ConsoleView.printPairMatchingView();
+        CourseAndMission courseAndMission = MatchParser.parseToCourseAndMission(Console.readLine());
+        boolean isGeneratable = decideToGeneratePairs(courseAndMission);
+        if (isGeneratable) {
+            List<List<String>> shuffledList = generatePairs(courseAndMission);
+            ConsoleView.printPariMatchedListView(shuffledList);
         }
-
         controllerPhase = ControllerPhase.MainMenu;
     }
 
-    private boolean decideToShuffle(CourseAndMission courseAndMission) {
-        boolean playShuffle = true;
+    private boolean decideToGeneratePairs(CourseAndMission courseAndMission) {
         if (crew.isThereMatchedInfo(courseAndMission)) {
-            while (true) {
-                try {
-                    consoleView.printMatchedListAlreadyExist();
-                    return matchParser.parseYesOrNo(Console.readLine());
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
+            return scanUserYesOrNo();
         }
-        return playShuffle;
+        return true;
     }
 
-    public List<List<String>> shuffle(CourseAndMission courseAndMission) {
-        Map<CourseAndMission, List<List<String>>> pairedCrewMap = crew.getPairedCrewMap();
-
-        pairedCrewMap.getOrDefault(courseAndMission, new ArrayList<>()).clear();
-
+    public List<List<String>> generatePairs(CourseAndMission courseAndMission) {
         List<String> defaultCrew = crew.getCrewsByCourseType(courseAndMission.courseType);
-        LinkedList<String> shuffledCrew = new LinkedList<>(Randoms.shuffle(defaultCrew));
 
-        while (shuffledCrew.size() >= 2) {
-            List<String> pair = extractTwoFromFirst(shuffledCrew);
-            crew.addPairsToList(courseAndMission, pair);
-        }
-        if (!shuffledCrew.isEmpty()) {
-            String lastCrew = shuffledCrew.remove(0);
-            crew.addCrewToLastPair(courseAndMission, lastCrew);
-        }
+        saveNewPairList(courseAndMission, defaultCrew);
 
-        return crew.getCrewsByCourseAndMission(courseAndMission);
+        return crew.getPairsByCourseAndMission(courseAndMission);
+    }
+
+    private boolean scanUserYesOrNo() {
+        while (true) {
+            try {
+                ConsoleView.printMatchedListAlreadyExist();
+                return MatchParser.parseYesOrNo(Console.readLine());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void saveNewPairList(CourseAndMission courseAndMission, List<String> defaultCrew) throws PairMatchException {
+        int counter = 0;
+        while (counter < 3) {
+            try {
+                List<List<String>> newPairs = Shuffler.shuffle(defaultCrew);
+                PairValidator.validate(newPairs, crew.getPairsByLevel(courseAndMission));
+                crew.putPairsByCourseAndMission(courseAndMission, newPairs);
+                return;
+            } catch (IllegalArgumentException illegalArgumentException) {
+                System.out.println(illegalArgumentException.getMessage());
+                counter++;
+            }
+        }
+        throw new PairMatchException("새로운 페어 생성에 실패했습니다.");
     }
 
     public ControllerPhase shiftPhase() {

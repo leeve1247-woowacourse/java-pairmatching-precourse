@@ -61,7 +61,7 @@ class ApplicationTest extends NsTest {
     @Test
     void 파싱_페어_매치() {
         MatchParser matchParser = new MatchParser();
-        CourseAndMission courseAndMission = matchParser.parse("백엔드, 레벨1, 자동차경주");
+        CourseAndMission courseAndMission = matchParser.parseToCourseAndMission("백엔드, 레벨1, 자동차경주");
         Assertions.assertNotNull(courseAndMission);
         Assertions.assertEquals("백엔드", courseAndMission.courseType.getKorean());
         Assertions.assertEquals(1, courseAndMission.missionType.getLevel());

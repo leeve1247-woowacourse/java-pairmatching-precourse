@@ -8,20 +8,18 @@ import pairmatching.data.crew.Crew;
 import pairmatching.view.ConsoleView;
 
 public class ViewMatchService {
-    ConsoleView consoleView;
     ControllerPhase controllerPhase;
     Crew crew;
 
-    public ViewMatchService(ConsoleView consoleView, ControllerPhase controllerPhase, Crew crew) {
-        this.consoleView = consoleView;
+    public ViewMatchService(ControllerPhase controllerPhase, Crew crew) {
         this.controllerPhase = controllerPhase;
         this.crew = crew;
     }
 
     public void run() {
-        CourseAndMission courseAndMission = MatchParser.parse(Console.readLine());
-        List<List<String>> crewsByCourseAndMission = crew.getCrewsByCourseAndMission(courseAndMission);
-        consoleView.printPariMatchedListView(crewsByCourseAndMission);
+        CourseAndMission courseAndMission = MatchParser.parseToCourseAndMission(Console.readLine());
+        List<List<String>> crewsByCourseAndMission = crew.getPairsByCourseAndMission(courseAndMission);
+        ConsoleView.printPariMatchedListView(crewsByCourseAndMission);
     }
 
     public ControllerPhase shiftPhase() {

@@ -7,7 +7,7 @@ import pairmatching.data.CourseType;
 import pairmatching.data.MissionType;
 
 public class ConsoleView {
-    public void printMainView(){
+    public static void printMainView(){
         System.out.println("기능을 선택하세요.");
         System.out.println("1. 페어 매칭");
         System.out.println("2. 페어 조회");
@@ -15,7 +15,7 @@ public class ConsoleView {
         System.out.println("Q. 종료");
     }
 
-    public void printPairMatchingView(){
+    public static void printPairMatchingView(){
         System.out.println("#############################################");
         printCourseView();
         printMissionsView();
@@ -23,7 +23,7 @@ public class ConsoleView {
         printExampleView();
     }
 
-    private void printCourseView() {
+    private static void printCourseView() {
         CourseType[] courseTypes = CourseType.values();
         String joinedCoursesName = Arrays.stream(courseTypes)
                 .map(CourseType::getKorean)
@@ -31,14 +31,14 @@ public class ConsoleView {
         System.out.printf("과정: %s\n", joinedCoursesName);
     }
 
-    private void printMissionsView() {
+    private static void printMissionsView() {
         System.out.println("미션:");
         for (int level = 1; level <= 5; level++) {
             printMissionView(level);
         }
     }
 
-    private void printMissionView(int level) {
+    private static void printMissionView(int level) {
         MissionType[] missionTypes = MissionType.values();
         String joinedLevelName = Arrays.stream(missionTypes)
                 .filter(missionType -> missionType.getLevel() == level)
@@ -47,14 +47,14 @@ public class ConsoleView {
         System.out.printf("- 레벨%d: %s\n", level, joinedLevelName);
     }
 
-    private void printExampleView(){
+    private static void printExampleView(){
         System.out.println("과정, 레벨, 미션을 선택하세요.");
         CourseType courseType = CourseType.values()[0];
         MissionType missionType = MissionType.values()[0];
         System.out.printf("ex) %s, 레벨%d, %s\n", courseType.getKorean(), missionType.getLevel(), missionType.getKorean());
     }
 
-    public void printPariMatchedListView(List<List<String>> matchedPairs) {
+    public static void printPariMatchedListView(List<List<String>> matchedPairs) {
         System.out.println("페어 매칭 결과입니다.");
         for (List<String> matchedPair : matchedPairs) {
             String joinedPairs = String.join(" : ", matchedPair);
@@ -62,7 +62,7 @@ public class ConsoleView {
         }
     }
 
-    public void printMatchedListAlreadyExist() {
+    public static void printMatchedListAlreadyExist() {
         System.out.println("매칭 정보가 있습니다. 다시 매칭하시겠습니까?");
         System.out.println("네 | 아니오");
     }

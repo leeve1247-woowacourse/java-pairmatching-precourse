@@ -7,15 +7,14 @@ import pairmatching.exception.PairMatchException;
 import pairmatching.view.ConsoleView;
 
 public class MainMenuService {
-    ConsoleView consoleView;
     ControllerPhase controllerPhase;
 
-    public MainMenuService(ConsoleView consoleView, ControllerPhase controllerPhase) {
-        this.consoleView = consoleView;
+    public MainMenuService(ControllerPhase controllerPhase) {
+        this.controllerPhase = controllerPhase;
     }
 
     public void run() {
-        consoleView.printMainView();
+        ConsoleView.printMainView();
         String userRawInput = Console.readLine().trim();
         this.controllerPhase = Arrays.stream(ControllerPhase.values())
                 .filter(controllerPhase -> controllerPhase.getKeyBoardInput().equals(userRawInput))
