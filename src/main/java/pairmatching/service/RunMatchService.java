@@ -1,0 +1,70 @@
+package pairmatching.service;
+
+import camp.nextstep.edu.missionutils.Console;
+import camp.nextstep.edu.missionutils.Randoms;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import pairmatching.CourseAndMission;
+import pairmatching.data.crew.Crew;
+import pairmatching.controller.ControllerPhase;
+import pairmatching.exception.PairMatchException;
+import pairmatching.view.ConsoleView;
+
+public class RunMatchService {
+    ConsoleView consoleView;
+    ControllerPhase controllerPhase;
+    RunMatchParser runMatchParser;
+
+    Crew crew;
+
+    public RunMatchService(ConsoleView consoleView, ControllerPhase controllerPhase, Crew crew) {
+        this.consoleView = consoleView;
+        this.controllerPhase = controllerPhase;
+        this.runMatchParser = new RunMatchParser();
+        this.crew = crew;
+    }
+
+    private static List<String> extractTwoFromFirst(List<String> shuffledCrew) {
+        List<String> pair = new ArrayList<>();
+        String remove = shuffledCrew.remove(0);
+        pair.add(
+                remove
+        );
+        pair.add(shuffledCrew.remove(0));
+        return pair;
+    }
+
+    public void run(){
+        consoleView.printPairMatchingView();
+        CourseAndMission courseAndMission = runMatchParser.parse(Console.readLine());
+        List<List<String>> shuffledList = shuffle(courseAndMission);
+        consoleView.printPariMatchedListView(shuffledList);
+        controllerPhase = ControllerPhase.MainMenu;
+    }
+
+    public List<List<String>> shuffle(CourseAndMission courseAndMission) {
+        Map<CourseAndMission, List<List<String>>> pairedCrewMap = crew.getPairedCrewMap();
+
+        pairedCrewMap.getOrDefault(courseAndMission, new ArrayList<>()).clear();
+
+        List<String> defaultCrew = crew.getCrewsByCourseType(courseAndMission.courseType);
+        LinkedList<String> shuffledCrew = new LinkedList<>(Randoms.shuffle(defaultCrew));
+
+        while (shuffledCrew.size() >= 2) {
+            List<String> pair = extractTwoFromFirst(shuffledCrew);
+            crew.addPairsToList(courseAndMission, pair);
+        }
+        if (!shuffledCrew.isEmpty()) {
+            String lastCrew = shuffledCrew.remove(0);
+            crew.addCrewToLastPair(courseAndMission, lastCrew);
+        }
+
+        return crew.getCrewsByCourseAndMission(courseAndMission);
+    }
+
+    public ControllerPhase shiftPhase() {
+        return ControllerPhase.MainMenu;
+    }
+}
