@@ -4,13 +4,14 @@ import camp.nextstep.edu.missionutils.Console;
 import java.util.List;
 import pairmatching.CourseAndMission;
 import pairmatching.controller.ControllerPhase;
+import pairmatching.controller.GameService;
 import pairmatching.data.crew.Crew;
 import pairmatching.data.crew.Shuffler;
 import pairmatching.exception.PairMatchException;
 import pairmatching.validator.PairValidator;
 import pairmatching.view.ConsoleView;
 
-public class RunMatchService {
+public class RunMatchService implements GameService {
     ControllerPhase controllerPhase;
     Crew crew;
 

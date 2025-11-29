@@ -18,6 +18,11 @@ public class Crew {
         loadCrewList();
     }
 
+    public void initList(){
+        pairedCrewMap = new HashMap<>();
+        pairedCrewMapByLevel = new HashMap<>();
+    }
+
     private void loadCrewList() {
         List<String> backendCrewsName = readResourceFile("backend-crew.md");
         List<String> frontendCrewsName = readResourceFile("frontend-crew.md");
